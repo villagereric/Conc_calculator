@@ -1,0 +1,30 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build exe
+        run: pyinstaller --onefile --windowed --name DrugConcCalculator main.py
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: DrugConcCalculator
+          path: dist/DrugConcCalculator.exe
